@@ -1,3 +1,6 @@
+create database pokemon_bbdd
+use pokemon_bbdd
+
 create table pokedex(
 id int PRIMARY KEY AUTO_INCREMENT,
 pokemon varchar(50),
@@ -13,3 +16,5 @@ special_defense int,
 media float,
 CONSTRAINT fk_id_pokemon FOREIGN KEY (id_pokemon) REFERENCES pokedex(id)
 );
+
+insert into pokedex(pokemon,type) values ("pikachu","electrico"),("bulbasur","planta"),("charmander","fuego"),("squirtle","agua")
