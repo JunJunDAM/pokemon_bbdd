@@ -9,7 +9,8 @@ import pymysql
 
 def database (query):
     try:
-        conn=pymysql.connect(host = "localhost", port = 3306, user = "root", passwd = "admin", database = "pokemon_bbdd")
+        #conn=pymysql.connect(host = "localhost", port = 3306, user = "root", passwd = "admin", database = "pokemon_bbdd")
+        conn=pymysql.connect(host = "localhost", port = 3308, user = "root", passwd = "", database = "pokemon_bbdd")
         cursor=conn.cursor()
         cursor.execute(query)
         conn.commit()
