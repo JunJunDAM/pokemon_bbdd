@@ -75,6 +75,16 @@ def create_pokemon():
         special_atack = int(input("Ataque especial: "))
         defense = int(input("Defensa: "))
         special_defense = int(input("Defensa especial: "))
+        
+        if atack == 0:
+            atack == 10
+        elif special_atack == 0:
+            special_atack = 10
+        elif defense == 0:
+            defense = 10
+        elif special_defense == 0:
+            special_defense = 10
+            
         media = (atack+special_atack+defense+special_defense)/4
         #ADD POKEMON TO POKEDEX
         new_pokemon_query = (f"insert into pokedex(pokemon,type) values ('{pokemon_name}','{pokemon_type}')")
@@ -106,8 +116,8 @@ def update_pokemon():
         print("\n" + pokemon + " no existe en la pokedex \n")
     else:
         evo_name = input(pokemon + " evoluciona a: ")
-        query = f"update pokedex set pokemon = '{evo_name}' where id = '{id_pokemon}'"
-        database(query)
+        update_name_query = f"update pokedex set pokemon = '{evo_name}' where id = '{id_pokemon}'"
+        #database(update_pokemon_query)
         stats = database("select * from stats where id_pokemon = '{id_pokemon}'")
         print(stats)
     
