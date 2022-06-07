@@ -18,3 +18,4 @@ CONSTRAINT fk_id_pokemon FOREIGN KEY (id_pokemon) REFERENCES pokedex(id)
 );
 
 insert into pokedex(pokemon,type) values ("pikachu","electrico"),("bulbasur","planta"),("charmander","fuego"),("squirtle","agua")
+insert into stats(id_pokemon,atack,special_atack,defense,special_defense)VALUES(1,10,10,10,10),(2,10,10,10,10),(3,10,10,10,10),(4,10,10,10,10);

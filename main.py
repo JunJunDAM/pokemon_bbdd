@@ -25,7 +25,7 @@ def get_pokedex():
     database(query)
 def get_pokemon():
     pokemon = input("Que pokemon quieres ver? ")
-    query = f"select * from pokedex where pokemon = {pokemon}"
+    query = f"select * from stats where id_pokemon = select id from pokedex where pokemon = {pokemon}"
     database(query)
 def create_pokemon():
     query = ""
