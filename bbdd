@@ -1,0 +1,15 @@
+create table pokedex(
+id int PRIMARY KEY AUTO_INCREMENT,
+pokemon varchar(50),
+type varchar(50)
+);
+
+create TABLE stats(
+id_pokemon int,
+atack int,
+special_atack int,
+defense int,
+special_defense int,
+media float,
+CONSTRAINT fk_id_pokemon FOREIGN KEY (id_pokemon) REFERENCES pokedex(id)
+);

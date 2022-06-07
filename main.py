@@ -24,7 +24,9 @@ def get_pokedex():
     query = "select * from pokedex"
     database(query)
 def get_pokemon():
-    query = ""
+    pokemon = input("Que pokemon quieres ver? ")
+    query = f"select * from pokedex where pokemon = {pokemon}"
+    database(query)
 def create_pokemon():
     query = ""
 def delete_pokemon():
