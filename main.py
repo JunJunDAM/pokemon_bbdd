@@ -80,10 +80,10 @@ def create_pokemon():
     if exists(pokemon_name) == False:
         pokemon_type = pokemon_type_list
         #STATS DATA
-        atack = random.randint(5, 100)
-        special_atack = random.randint(5, 100)
-        defense = random.randint(5, 100)
-        special_defense = random.randint(5, 100)
+        atack = random.randint(20, 100)
+        special_atack = random.randint(20, 100)
+        defense = random.randint(20, 100)
+        special_defense = random.randint(20, 100)
          
         media = (atack+special_atack+defense+special_defense)/4
         #ADD POKEMON TO POKEDEX
@@ -139,6 +139,7 @@ def figth(pokemon1,pokemon2):
     cont_pokemon2 = 0
     id_pokemon1 = exists(pokemon1)
     id_pokemon2 = exists(pokemon2)
+    
     #GET MEDIA
     media_pokemon1_query = f"select media from stats where id_pokemon = {id_pokemon1}"
     media_pokemon2_query = f"select media from stats where id_pokemon = {id_pokemon2}"
@@ -146,25 +147,53 @@ def figth(pokemon1,pokemon2):
     media_pokemon2 = database(media_pokemon2_query)
     media_pokemon1 = media_pokemon1[0][0]
     media_pokemon2 = media_pokemon2[0][0]
+    #GET TYPE OF POKEMON
+    pokemon1_type_query = f"select type from pokedex where id = {id_pokemon1}"
+    pokemon2_type_query = f"select type from pokedex where id = {id_pokemon2}"
+    pokemon1_type = database(pokemon1_type_query)
+    pokemon2_type = database(pokemon2_type_query)
+    pokemon1_type = pokemon1_type[0][0]
+    pokemon2_type = pokemon2_type[0][0]
+    
+    print("\n")
+    print("****************************************")
+    print("***** " + pokemon1 + " tiene un poder de", media_pokemon1, "y es tipo: " + pokemon1_type)
+    print("**************    VS    ****************")
+    print("***** " + pokemon2 + " tiene un poder de", media_pokemon2, "y es tipo: " + pokemon2_type)
+    print("****************************************")
+    print("\n")
+    
+    if pokemon1_type == "agua" and pokemon2_type == "fuego":
+        media_pokemon1 += 7.5
+        media_pokemon2 -= 7.5
+    elif pokemon1_type == "fuego" and pokemon2_type == "agua" :
+        media_pokemon1 -= 7.5
+        media_pokemon2 += 7.5
+    elif pokemon1_type == "planta" and pokemon2_type == "agua":
+        media_pokemon1 += 7.5
+        media_pokemon2 -= 7.5
+    elif pokemon1_type == "agua" and pokemon2_type == "planta" :
+        media_pokemon1 -= 7.5
+        media_pokemon2 += 7.5
+    elif pokemon1_type == "fuego" and pokemon2_type == "planta":
+        media_pokemon1 += 7.5
+        media_pokemon2 -= 7.5
+    elif pokemon1_type == "planta" and pokemon2_type == "fuego" :
+        media_pokemon1 -= 7.5
+        media_pokemon2 += 7.5
+            
     
     media_dif = abs(media_pokemon1 - media_pokemon2)
     print(media_dif)
     max_media = ""
     min_media = ""
+    
     if media_pokemon1 > media_pokemon2:
         max_media = pokemon1
         min_media = pokemon2
     else:
         max_media = pokemon2
         min_media = pokemon1
-        
-    print("\n")
-    print("****************************************")
-    print("***** " + pokemon1 + " tiene un poder de", media_pokemon1)
-    print("**************    VS    ****************")
-    print("***** " + pokemon2 + " tiene un poder de", media_pokemon2)
-    print("****************************************")
-    print("\n")
     
     for i in range(1,4):
         if media_dif < 10:
@@ -176,8 +205,17 @@ def figth(pokemon1,pokemon2):
                 print("Combate", i , ", Ganador: " + min_media)
                 cont_pokemon2 += 1
                 
-        elif media_dif >= 10 and media_dif < 30:
+        elif media_dif >= 10 and media_dif < 20:
             randomn = random.randint(20, 100)
+            if randomn >= 50:
+                print("Combate", i , ", Ganador: " + max_media)
+                cont_pokemon1 += 1
+            else:
+                print("Combate", i , ", Ganador: " + min_media)
+                cont_pokemon2 += 1
+                
+        elif media_dif >= 20 and media_dif < 30:
+            randomn = random.randint(30, 100)
             if randomn >= 50:
                 print("Combate", i , ", Ganador: " + max_media)
                 cont_pokemon1 += 1
