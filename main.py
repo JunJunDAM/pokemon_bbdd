@@ -6,7 +6,7 @@ Created on Tue Jun  7 15:12:15 2022
 """
 
 import pymysql
-
+#database with phpMyAdmin
 def database (query):
     try:
         #conn=pymysql.connect(host = "localhost", port = 3306, user = "root", passwd = "admin", database = "pokemon_bbdd")
@@ -25,17 +25,17 @@ def database (query):
 #VERIFY IF POKEMON EXISTS AND RETURNS ID
 def exists (pokemon_name):
     try:
-        resultado = ""
+        result = ""
         #conn=pymysql.connect(host = "localhost", port = 3306, user = "root", passwd = "admin", database = "pokemon_bbdd")
         conn=pymysql.connect(host = "localhost", port = 3308, user = "root", passwd = "", database = "pokemon_bbdd")
         cursor=conn.cursor()
         cursor.execute(f"select id from pokedex where pokemon = '{pokemon_name}'")
         for base in cursor:
-            resultado = list(map(int, base))
-        if len(resultado) == 0:
+            result = list(map(int, base))
+        if len(result) == 0:
             return False
         else:
-            return resultado[0]
+            return result[0]
     except(pymysql.err.OperationalError,pymysql.err.InternalError) as e:
         print("Error: ",e)
 
@@ -47,13 +47,13 @@ def get_pokedex():
         print(pokemon)
  
 #GET POKEMON BY NAME
-def get_pokemon():
-    pokemon = input("Que pokemon quieres ver? ")
+def get_pokemon(pokemon):
     query = (f"select * from stats where id_pokemon = (select id from pokedex where pokemon = '{pokemon}')")
     stats = database(query)
     if len(stats)==0:
         print("\n" + pokemon + " no esta en la pokedex \n")
     else: 
+        #GET VALUES FROM TUPLE
         id_pokemon = stats[0][0]
         atack = stats[0][1]
         special_atack = stats[0][2]
@@ -66,24 +66,16 @@ def get_pokemon():
 
 #ADD POKEMON TO DATABASE
 def create_pokemon():
+    import random
     #POKEMON DATA
     pokemon_name = input("Nombre: ")
     if exists(pokemon_name) == False:
         pokemon_type = input("Tipo: ")
         #STATS DATA
-        atack = int(input("Ataque: "))
-        special_atack = int(input("Ataque especial: "))
-        defense = int(input("Defensa: "))
-        special_defense = int(input("Defensa especial: "))
-        
-        if atack == 0:
-            atack == 10
-        elif special_atack == 0:
-            special_atack = 10
-        elif defense == 0:
-            defense = 10
-        elif special_defense == 0:
-            special_defense = 10
+        atack = random.randint(5, 100)
+        special_atack = random.randint(5, 100)
+        defense = random.randint(5, 100)
+        special_defense = random.randint(5, 100)
             
         media = (atack+special_atack+defense+special_defense)/4
         #ADD POKEMON TO POKEDEX
@@ -92,14 +84,13 @@ def create_pokemon():
         #GET POKEMON ID
         pokemon_id = exists(pokemon_name)
         #ADD STATS
-        new_stats_query = f"insert into stats (id_pokemon,atack,special_atack,defense,special_defense,media) values ('{pokemon_id}','{atack}','{special_atack}','{defense}','{special_defense}','{media}')"
+        new_stats_query = f"insert into stats (id_pokemon,atack,special_atack,defense,special_defense,media) values ({pokemon_id},{atack},{special_atack},{defense},{special_defense},{media})"
         database(new_stats_query)
     else:
         print("\n" + pokemon_name + " ya esta registrado en la pokedex \n")
  
 #DELETE POKEMON FROM DATABASE
-def delete_pokemon():
-    pokemon = input("Que pokemon quieres borrar? ")
+def delete_pokemon(pokemon):
     id_pokemon = exists(pokemon)
     if id_pokemon == False:
         print("\n" + pokemon + " no existe en la pokedex \n")
@@ -109,17 +100,28 @@ def delete_pokemon():
         print("\n" + pokemon + " ha sido eliminado de la pokedex \n")
  
 #UPDATE POKEMON VALUES AND STATS
-def update_pokemon():
-    pokemon = input("Que pokemon quieres evolucionar? ")
+def update_pokemon(pokemon):
+    import random
     id_pokemon = exists(pokemon)
     if id_pokemon == False:
         print("\n" + pokemon + " no existe en la pokedex \n")
     else:
         evo_name = input(pokemon + " evoluciona a: ")
-        update_name_query = f"update pokedex set pokemon = '{evo_name}' where id = '{id_pokemon}'"
+        update_name_query = f"update pokedex set pokemon = '{evo_name}' where id = {id_pokemon}"
         #database(update_pokemon_query)
-        stats = database("select * from stats where id_pokemon = '{id_pokemon}'")
-        print(stats)
+        stats = database(f"select * from stats where id_pokemon = {id_pokemon}")
+        evo_atack = stats[0][1] + random.randint(5, 50)
+        evo_special_atack = stats[0][2] + random.randint(5, 50)
+        evo_defense = stats[0][3] + random.randint(5, 50)
+        evo_special_defense = stats[0][4] + random.randint(5, 50)
+        evo_media = (evo_atack+evo_special_atack+evo_defense+evo_special_defense)/4
+        evo_stats_query = f"update stats set atack = {evo_atack}, special_atack = {evo_special_atack}, defense = {evo_defense}, special_defense = {evo_special_defense}, media = {evo_media} where id_pokemon = {id_pokemon}"
+        database(update_name_query)
+        database(evo_stats_query)
+        print("********** EVOLUTION STATS **********")
+        get_pokemon(evo_name)
+        print("*************************************")
+        
     
 def menu():
     print("\n")
@@ -140,13 +142,16 @@ def validar_option(option):
     if option == '0':
         get_pokedex()
     elif option == '1':
-        get_pokemon()
+        pokemon = input("Que pokemon quieres ver? ")
+        get_pokemon(pokemon)
     elif option == '2':
         create_pokemon()
     elif option == '3':
-        delete_pokemon()
+        pokemon = input("Que pokemon quieres borrar? ")
+        delete_pokemon(pokemon)
     elif option == '4':
-        update_pokemon()
+        pokemon = input("Que pokemon quieres evolucionar? ")
+        update_pokemon(pokemon)
     elif option == '5':
         print("\nAdios!")
         exit()
